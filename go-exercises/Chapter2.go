@@ -23,6 +23,6 @@ func Sqrt(x float64) float64 {
 	return z
 }
 
-func main() {
-	forFunc()
-}
+//func main() {
+//	forFunc()
+//}

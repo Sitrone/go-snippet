@@ -19,6 +19,12 @@ func initValue() {
 	fmt.Printf("%v %v %v %q\n", i, f, b, s)
 }
 
+func testBit() {
+	a := 0101
+	b := 0011
+	fmt.Printf("bit result:%b\n", a&^b)
+}
+
 func testPrint() {
 	fmt.Println("Hello World")
 	fmt.Println("Now you have %g problems.", math.Sqrt(7))
@@ -38,6 +44,7 @@ func needFloat(x float64) float64 {
 }
 
 func main() {
+	testBit()
 	testPrint()
 	a := "1"
 	b := "2"

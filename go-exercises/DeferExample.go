@@ -6,10 +6,10 @@ import "fmt"
 defer 栈，后进先出
 */
 
-func main() {
-	a()
-	b()
-}
+//func main() {
+//	a()
+//	b()
+//}
 
 func a() {
 	i := 0
