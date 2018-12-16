@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"hash/fnv"
 	"io/ioutil"
-	"log"
 	"os"
 )
 
@@ -17,7 +16,7 @@ func doMap(
 ) {
 	content, err := ioutil.ReadFile(inFile)
 	if err != nil {
-		log.Fatalf("failed to open file:%s, msg:%s", inFile, err.Error())
+		debug("failed to open file:%s, msg:%s", inFile, err.Error())
 		return
 	}
 	keyValues := mapF(inFile, string(content))
@@ -27,7 +26,7 @@ func doMap(
 	for i := 0; i < nReduce; i++ {
 		rn := reduceName(jobName, mapTask, i)
 		if f, err := os.Create(rn); err != nil {
-			log.Printf("create file %s failed", rn)
+			debug("create file %s failed", rn)
 		} else {
 			intermediateFiles[i] = f
 			encoders[i] = json.NewEncoder(f)
@@ -38,7 +37,7 @@ func doMap(
 		i := ihash(kv.Key) % nReduce
 		if encoders[i] != nil {
 			if err := encoders[i].Encode(&kv); err != nil {
-				log.Fatalf("failed to write %v to file %s ", kv, reduceName(jobName, mapTask, i))
+				debug("failed to write %v to file %s ", kv, reduceName(jobName, mapTask, i))
 			}
 		}
 	}

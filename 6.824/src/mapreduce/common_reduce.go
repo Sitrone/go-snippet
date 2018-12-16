@@ -16,7 +16,7 @@ func doReduce(
 ) {
 	out, err := os.Create(outFile)
 	if err != nil {
-		log.Fatalf("failed to create reduce outFile %s", outFile)
+		debug("failed to create reduce outFile %s", outFile)
 		return
 	}
 	defer out.Close()
@@ -31,7 +31,7 @@ func doReduce(
 			var kv KeyValue
 			for dec.More() {
 				if err := dec.Decode(&kv); err != nil {
-					log.Fatalf("failed to decode keyValue")
+					debug("failed to decode keyValue")
 				} else {
 					kvs[kv.Key] = append(kvs[kv.Key], kv.Value)
 				}
@@ -49,7 +49,7 @@ func doReduce(
 	enc := json.NewEncoder(out)
 	for _, key := range keys {
 		if err = enc.Encode(KeyValue{key, reduceF(key, kvs[key])}); err != nil {
-			log.Fatalf("write [key: %s] to file %s failed", key, outFile)
+			debug("write [key: %s] to file %s failed", key, outFile)
 		}
 	}
 

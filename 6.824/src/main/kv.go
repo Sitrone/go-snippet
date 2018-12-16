@@ -127,7 +127,7 @@ func (kv *KV) Put(args *PutArgs, reply *PutReply) error {
 	return nil
 }
 
-// 6.824 letcture 2
+// 6.824 lecture 2
 // main
 //
 

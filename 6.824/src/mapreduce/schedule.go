@@ -2,7 +2,6 @@ package mapreduce
 
 import (
 	"fmt"
-	"log"
 	"sync"
 )
 
@@ -67,7 +66,7 @@ func schedule(jobName string, mapFiles []string, nReduce int, phase jobPhase, re
 				wg.Done()
 				registerChan <- work
 			} else {
-				log.Fatalf("Schedule: assign %s task %v to %s failed", phase, taskArgs.TaskNumber, worker)
+				debug("Schedule: assign %s task %v to %s failed", phase, taskArgs.TaskNumber, worker)
 
 				// put failed task back to task channel
 				tasks <- taskArgs.TaskNumber

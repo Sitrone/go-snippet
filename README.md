@@ -4,7 +4,7 @@
 
    * Google 三大论文GFS， bigtable， MapReduce
    * [ddia-设计数据密集型应用](https://book.douban.com/subject/30329536/) 
-   * [MIT课程《Distributed Systems 》学习和翻译](https://github.com/feixiao/Distributed-Systems)
+   * 中文翻译参考：[MIT课程《Distributed Systems 》学习和翻译](https://github.com/feixiao/Distributed-Systems)
 
 2. go-exercise，熟悉go使用的一些惯用法的例子
 

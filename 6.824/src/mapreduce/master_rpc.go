@@ -45,7 +45,8 @@ func (mr *Master) startRPCServer() {
 					conn.Close()
 				}()
 			} else {
-				debug("RegistrationServer: accept error", err)
+				// 需要注释掉该行日志，不然会执行测试命令会报错
+				//debug("RegistrationServer: accept error", err)
 				break
 			}
 		}
