@@ -11,5 +11,5 @@ type Product struct {
 }
 
 func (product *Product) toString() string {
-	return fmt.Sprintf("%b", &product)
+	return fmt.Sprintf("%v", &product)
 }
