@@ -6,8 +6,8 @@ import (
 )
 
 func TestKMP_Search(t *testing.T) {
-	kmp := NewKMP("aaab")
+	kmp := NewKMP("abababca")
 
 	// 6
-	fmt.Println(kmp.Search("aaaaaaaaab"))
+	fmt.Println(kmp.Search("ababababca"))
 }

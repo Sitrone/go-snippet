@@ -2,46 +2,52 @@ package algs
 
 type KMP struct {
 	pattern string
-	lsp     []int
+	next    []int
 }
 
 // ref : https://www.nayuki.io/page/knuth-morris-pratt-string-matching
-// 算法4 使用DFA构造next表
+// 方法一：算法4 使用DFA构造next表
+// 方法二：直接构造  https://www.zhihu.com/question/21923021 已经截图印象笔记
 
 func NewKMP(pattern string) *KMP {
-	lsp := computeLspTable(pattern)
-	return &KMP{pattern: pattern, lsp: lsp}
+	next := computeNext(pattern)
+	return &KMP{pattern: pattern, next: next}
 }
 
 func (kmp *KMP) Search(text string) int {
-	j := 0
-	for i := 0; i < len(text); i++ {
-		for j > 0 && text[i] != kmp.pattern[j] {
-			j = kmp.lsp[j-1]
-		}
-		if text[i] == kmp.pattern[j] {
+	i, j := 0, 0
+
+	for i < len(text) && j < len(kmp.pattern) {
+		if j == -1 || text[i] == kmp.pattern[j] {
+			i++
 			j++
-			if j == len(kmp.pattern) {
-				return i - (j - 1)
-			}
+		} else {
+			j = kmp.next[j]
 		}
 	}
-	return -1
+
+	if j == len(kmp.pattern) {
+		return i - j
+	} else {
+		return -1
+	}
 }
 
-func computeLspTable(pattern string) []int {
-	lsp := make([]int, len(pattern))
-	lsp[0] = 0
+func computeNext(pattern string) []int {
+	next := make([]int, len(pattern))
 
-	for i := 1; i < len(pattern); i++ {
-		j := lsp[i-1]
-		for j > 0 && pattern[i] != pattern[j] {
-			j = lsp[j-1]
-		}
-		if pattern[i] == pattern[j] {
+	next[0] = -1
+	i, j := 0, -1
+
+	for i < len(pattern)-1 {
+		if j == -1 || pattern[i] == pattern[j] {
+			i++
 			j++
+			next[i] = j
+		} else {
+			j = next[j]
 		}
-		lsp[i] = j
 	}
-	return lsp
+
+	return next
 }
