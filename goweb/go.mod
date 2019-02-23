@@ -1,1 +1,1 @@
-module goweb
+module example/goweb

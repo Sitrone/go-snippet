@@ -5,15 +5,17 @@ import (
 	"fmt"
 	"html/template"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"regexp"
 )
 
+// 用法， 输入 http://localhost:18080/view/hello, 出现hello为title的页面编辑
 func main() {
 	http.HandleFunc("/view/", viewHandler)
 	http.HandleFunc("/edit/", editHandler)
 	http.HandleFunc("/save/", saveHandler)
-	http.ListenAndServe(":18080", nil)
+	log.Fatal(http.ListenAndServe(":18080", nil))
 }
 
 type Page struct {
@@ -52,7 +54,11 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func viewHandler(w http.ResponseWriter, r *http.Request) {
-	title, _ := getTitle(w, r)
+	title, err := getTitle(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	p, err := loadPage(title)
 	if err != nil {
 		http.Redirect(w, r, "/edit/"+title, http.StatusFound)
@@ -62,7 +68,11 @@ func viewHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func editHandler(w http.ResponseWriter, r *http.Request) {
-	title, _ := getTitle(w, r)
+	title, err := getTitle(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	p, err := loadPage(title)
 	if err != nil {
 		p = &Page{Title: title}
@@ -71,10 +81,14 @@ func editHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func saveHandler(w http.ResponseWriter, r *http.Request) {
-	title, _ := getTitle(w, r)
+	title, err := getTitle(w, r)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	body := r.FormValue("body")
 	p := &Page{Title: title, Body: []byte(body)}
-	err := p.savePage()
+	err = p.savePage()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
