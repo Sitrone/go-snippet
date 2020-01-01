@@ -7,7 +7,7 @@ import (
 )
 
 func ListFiles(dir string) ([]string, error) {
-	fileList := make([]string, 16)
+	fileList := make([]string, 0, 16)
 	e := filepath.Walk(dir, func(path string, f os.FileInfo, err error) error {
 		fileList = append(fileList, path)
 		return err

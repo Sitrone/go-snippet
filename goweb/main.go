@@ -2,7 +2,9 @@ package main
 
 import (
 	"errors"
+	"example/goweb/router"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"html/template"
 	"io/ioutil"
 	"log"
@@ -12,10 +14,19 @@ import (
 
 // 用法， 输入 http://localhost:18080/view/hello, 出现hello为title的页面编辑
 func main() {
-	http.HandleFunc("/view/", viewHandler)
-	http.HandleFunc("/edit/", editHandler)
-	http.HandleFunc("/save/", saveHandler)
-	log.Fatal(http.ListenAndServe(":18080", nil))
+	//http.HandleFunc("/view/", viewHandler)
+	//http.HandleFunc("/edit/", editHandler)
+	//http.HandleFunc("/save/", saveHandler)
+	//log.Fatal(http.ListenAndServe(":18080", nil))
+
+	c := gin.Default()
+	v1 := c.Group("/api/v1/")
+	{
+		v1.GET("auto_bind_hello", router.AutoBindWrap(router.AutoBindGet))
+		v1.POST("auto_bind_hello", router.AutoBindWrap(router.AutoBindCreate))
+	}
+	log.Fatal(c.Run(":18080"))
+
 }
 
 type Page struct {

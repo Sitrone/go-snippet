@@ -16,4 +16,9 @@ func TestNewLRUCache(t *testing.T) {
 	lruCache.Put(5, "5")
 	fmt.Println(lruCache.Get(5))
 	fmt.Println(lruCache)
+
+	s := "m.y+name@email.com"
+	for _, v := range s {
+		fmt.Println(v == 'm')
+	}
 }

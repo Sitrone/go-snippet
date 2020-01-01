@@ -2,6 +2,7 @@ package algs
 
 import "math/rand"
 
+// ref rand.Perm(int)
 type Shuffle struct {
 	ori []int
 }
@@ -13,14 +14,14 @@ func Constructor(nums []int) Shuffle {
 }
 
 /** Resets the array to its original configuration and return it. */
-func (this *Shuffle) Reset() []int {
-	return this.ori
+func (s *Shuffle) Reset() []int {
+	return s.ori
 }
 
 /** Returns a random shuffling of the array. */
-func (this *Shuffle) Shuffle() []int {
-	ori := make([]int, len(this.ori))
-	copy(ori, this.ori)
+func (s *Shuffle) Shuffle() []int {
+	ori := make([]int, len(s.ori))
+	copy(ori, s.ori)
 	rd := make([]int, len(ori))
 	for i := len(rd) - 1; i >= 0; i-- {
 		pos := rand.Intn(i + 1)

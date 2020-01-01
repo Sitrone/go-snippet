@@ -4,36 +4,36 @@ import "errors"
 
 type Stack []interface{}
 
-func (stack Stack) Len() int {
-	return len(stack)
+func (s Stack) Len() int {
+	return len(s)
 }
 
-func (stack Stack) IsEmpty() bool {
-	return len(stack) == 0
+func (s Stack) IsEmpty() bool {
+	return len(s) == 0
 }
 
-func (stack Stack) Cap() int {
-	return cap(stack)
+func (s Stack) Cap() int {
+	return cap(s)
 }
 
-func (stack *Stack) Push(value interface{}) {
-	*stack = append(*stack, value)
+func (s *Stack) Push(value interface{}) {
+	*s = append(*s, value)
 }
 
-func (stack Stack) Top() (interface{}, error) {
-	if len(stack) == 0 {
+func (s Stack) Top() (interface{}, error) {
+	if len(s) == 0 {
 		return nil, errors.New("out of index, len is 0")
 	}
-	return stack[len(stack)-1], nil
+	return s[len(s)-1], nil
 }
 
-func (stack *Stack) Pop() (interface{}, error) {
-	oldStack := *stack
+func (s *Stack) Pop() (interface{}, error) {
+	oldStack := *s
 	if len(oldStack) == 0 {
 		return nil, errors.New("out of index, len is 0")
 	}
 
 	ret := oldStack[len(oldStack)-1]
-	*stack = oldStack[:len(oldStack)-1]
+	*s = oldStack[:len(oldStack)-1]
 	return ret, nil
 }
