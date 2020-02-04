@@ -1,6 +1,9 @@
 package snippet
 
-import "math"
+import (
+	"fmt"
+	"math"
+)
 
 // https://time.geekbang.org/column/article/74287
 // 回溯算法两个经典例子
@@ -34,6 +37,8 @@ func Bag01(items []int, w int) int {
 // 正则表达式匹配
 // 假设正则表达式中只包含“*”和“?”这两种通配符，并且对这两个通配符的语义稍微做些改变，
 // 其中，“*”匹配任意多个（大于等于 0 个）任意字符，“?”匹配零个或者一个任意字符
+// PS 注意与lc 这个题的区别：https://leetcode-cn.com/problems/regular-expression-matching/
+// lc匹配的是前面的字符0个或多个
 func RegMatch(text, pattern string) bool {
 	rText := []rune(text)
 	rPattern := []rune(pattern)
@@ -49,22 +54,22 @@ func RegMatch(text, pattern string) bool {
 			return
 		}
 
-		if pPos == pLen && tPos == tLen {
-			matched = true
-			return
-		}
-		if pPos == pLen || tPos == tLen {
+		if pPos == pLen {
+			if tPos == tLen {
+				matched = true
+			}
 			return
 		}
 
+		fmt.Printf("tPos=%d, pPos=%d\n", tPos, pPos)
 		if pattern[pPos] == '*' { // *匹配任意个字符
-			for i := 0; i < tLen-tPos; i++ {
+			for i := 0; i <= tLen-tPos; i++ {
 				match(tPos+i, pPos+1, text, pattern)
 			}
 		} else if pattern[pPos] == '?' { // ?匹配0个或者1个字符
 			match(tPos, pPos+1, text, pattern)
 			match(tPos+1, pPos+1, text, pattern)
-		} else if text[tPos] == pattern[pPos] {
+		} else if text[tPos] == pattern[pPos] && tPos < tLen {
 			match(tPos+1, pPos+1, text, pattern)
 		}
 	}

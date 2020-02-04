@@ -21,8 +21,8 @@ func TestRegMatch(t *testing.T) {
 
 func TestRegMatch2(t *testing.T) {
 	var (
-		text    = "abcdddddf"
-		pattern = "abc*?"
+		text    = "aab"
+		pattern = "c*a*b"
 	)
 
 	matched := RegMatch(text, pattern)
