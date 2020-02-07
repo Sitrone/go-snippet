@@ -16,7 +16,7 @@ func TestCouponData_Gen(t *testing.T) {
 	fmt.Println(len(ret))
 	//fmt.Println(ret)
 	m := make(map[string]struct{}, len(ret))
-	for _, v := range ret {
+	for v := range ret {
 		if _, ok := m[v]; ok {
 			fmt.Println(v)
 			log.Fatalf("duplicate key found, v=[%s]\n", v)

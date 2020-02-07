@@ -20,7 +20,7 @@ func NewData2() *Coupon2Data {
 	}
 }
 
-func (c *Coupon2Data) Gen(nums int) ([]string, error) {
+func (c *Coupon2Data) Gen(nums int) (chan string, error) {
 	if len(c.Alphabet) < c.Len {
 		return nil, errors.New("not enough alphabet to generate len unique string")
 	}
@@ -29,18 +29,22 @@ func (c *Coupon2Data) Gen(nums int) ([]string, error) {
 		nums = c.total()
 	}
 
-	ret := make([]string, nums)
-	m := make(map[string]struct{}, nums)
-
-	total := c.total()
-	for i := 0; i < nums; {
-		pos := srand.Int63n(int64(total))
-		s := c.pos2String(int(pos))
-		if _, ok := m[s]; !ok {
-			ret[i] = s
-			i++
+	ret := make(chan string)
+	go func() {
+		m := make(map[string]struct{}, nums)
+		// 使用随机数来计算会存在极端场景一直随机到已经出现的那个重复数 FIXME 参考randomGet方法
+		total := c.total()
+		for i := 0; i < nums; {
+			pos := srand.Int63n(int64(total))
+			s := c.pos2String(int(pos))
+			if _, ok := m[s]; !ok {
+				ret <- s
+				i++
+			}
 		}
-	}
+
+		close(ret)
+	}()
 
 	return ret, nil
 }

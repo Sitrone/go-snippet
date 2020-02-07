@@ -19,7 +19,7 @@ type CouponData struct {
 }
 
 type ICoupon interface {
-	Gen(nums int) ([]string, error)
+	Gen(nums int) (chan string, error)
 }
 
 func NewData() *CouponData {
@@ -29,7 +29,7 @@ func NewData() *CouponData {
 	}
 }
 
-func (c *CouponData) Gen(nums int) ([]string, error) {
+func (c *CouponData) Gen(nums int) (chan string, error) {
 	if len(c.Alphabet) < c.Len {
 		return nil, errors.New("not enough alphabet to generate len unique string")
 	}
@@ -41,7 +41,7 @@ func (c *CouponData) Gen(nums int) ([]string, error) {
 	return c.doGen(nums)
 }
 
-func (c *CouponData) doGen(nums int) ([]string, error) {
+func (c *CouponData) doGen(nums int) (chan string, error) {
 	arr := rnd.Perm(c.total())
 
 	dest := make([]int, nums)
@@ -52,12 +52,15 @@ func (c *CouponData) doGen(nums int) ([]string, error) {
 	return c.map2Ret(dest), nil
 }
 
-func (c *CouponData) map2Ret(positions []int) []string {
-	ret := make([]string, len(positions))
+func (c *CouponData) map2Ret(positions []int) chan string {
+	ret := make(chan string)
 
-	for i, pos := range positions {
-		ret[i] = c.pos2String(pos)
-	}
+	go func() {
+		for _, pos := range positions {
+			ret <- c.pos2String(pos)
+		}
+		close(ret)
+	}()
 
 	return ret
 }
