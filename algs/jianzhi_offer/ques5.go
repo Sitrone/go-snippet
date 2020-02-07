@@ -1,6 +1,8 @@
-package algs
+package jianzhi_offer
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // 从尾到头打印链表
 func PrintListFromEnd2Front(head *ListNode) {
@@ -20,7 +22,7 @@ func PrintListFromEnd2Front1(head *ListNode) {
 
 	var stack Stack
 	cur := head
-	for cur != nil{
+	for cur != nil {
 		stack.Push(cur.Value)
 		cur = cur.Next
 	}

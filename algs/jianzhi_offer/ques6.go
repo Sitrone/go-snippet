@@ -1,4 +1,4 @@
-package algs
+package jianzhi_offer
 
 // 重建二叉树， 不含重复数字
 func ConstructTree(pre, in []int) *TreeNode {

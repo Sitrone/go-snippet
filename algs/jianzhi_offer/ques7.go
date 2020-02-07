@@ -1,6 +1,8 @@
-package algs
+package jianzhi_offer
 
-import "errors"
+import (
+	"errors"
+)
 
 // 两个栈实现一个队列
 type MyQueue struct {

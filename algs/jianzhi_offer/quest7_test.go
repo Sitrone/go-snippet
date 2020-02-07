@@ -1,4 +1,4 @@
-package algs
+package jianzhi_offer
 
 import (
 	"fmt"
