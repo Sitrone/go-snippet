@@ -108,16 +108,16 @@ type ListNode2 struct {
 }
 
 /** Initialize your data structure here. Set the size of the deque to be k. */
-func Constructor(k int) MyCircularDeque {
-	node := &ListNode2{Val: -1}
-	node.Next = node
-	node.Pre = node
-	return MyCircularDeque{
-		len:       0,
-		cap:       k,
-		dummyNode: node,
-	}
-}
+//func Constructor(k int) MyCircularDeque {
+//	node := &ListNode2{Val: -1}
+//	node.Next = node
+//	node.Pre = node
+//	return MyCircularDeque{
+//		len:       0,
+//		cap:       k,
+//		dummyNode: node,
+//	}
+//}
 
 /** Adds an item at the front of Deque. Return true if the operation is successful. */
 func (this *MyCircularDeque) InsertFront(value int) bool {

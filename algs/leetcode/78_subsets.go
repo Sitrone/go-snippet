@@ -21,9 +21,30 @@ func subsets(nums []int) [][]int {
 	}
 
 	for i := 0; i <= len(nums); i++ {
-		cur := make([]int, 0, len(nums))
+		cur := make([]int, 0, i)
 		backtrace(0, i, cur)
 	}
 
 	return ans
+}
+
+// 动态规划:
+// 初始状态：dp[0]=[[]];
+// dp[i+1]={dp[i],[dp[i],nums[i-1]]}
+// FIXME 参考解法
+func subsets1(nums []int) [][]int {
+	result := make([][]int, 0)
+	result = append(result, []int{})
+
+	//遍历nums中的数，每遍历到一个就将该值依次添加到前面的所有子集中，形成新的子集
+	for i := 0; i < len(nums); i++ {
+		l := len(result)
+		for j := 0; j < l; j++ {
+			tmp := make([]int, 0)
+			tmp = append(tmp, result[j]...)
+			tmp = append(tmp, nums[i])
+			result = append(result, tmp)
+		}
+	}
+	return result
 }
