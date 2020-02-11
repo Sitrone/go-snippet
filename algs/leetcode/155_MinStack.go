@@ -7,12 +7,12 @@ type MinStack struct {
 
 // 思路：双栈，一个存储正常的值，一个存储最小值（有数据冗余）
 /** initialize your data structure here. */
-func Constructor() MinStack {
-	return MinStack{
-		eles:    make([]int, 0),
-		minNums: make([]int, 0),
-	}
-}
+//func Constructor() MinStack {
+//	return MinStack{
+//		eles:    make([]int, 0),
+//		minNums: make([]int, 0),
+//	}
+//}
 
 func (this *MinStack) Push(x int) {
 	this.eles = append(this.eles, x)
