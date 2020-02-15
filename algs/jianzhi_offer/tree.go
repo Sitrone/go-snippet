@@ -4,10 +4,10 @@ import "fmt"
 
 type TreeNode struct {
 	Val   int
-	left  *TreeNode
-	right *TreeNode
+	Left  *TreeNode
+	Right *TreeNode
 }
 
 func (root *TreeNode) String() string {
-	return fmt.Sprintf("TreeNode{value=%d, left=%v, right-%v}", root.Val, root.left, root.right)
+	return fmt.Sprintf("TreeNode{value=%d, Left=%v, Right-%v}", root.Val, root.Left, root.Right)
 }

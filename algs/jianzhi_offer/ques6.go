@@ -14,8 +14,8 @@ func ReConstruct(pre []int, pStart, pEnd int, in []int, iStart, iEnd int) *TreeN
 	// 需要使用遍历的手段找到in树的root节点位置
 	for i := iStart; i <= iEnd; i++ {
 		if pre[pStart] == in[i] {
-			root.left = ReConstruct(pre, pStart+1, pStart+i-iStart, in, iStart, i-1)
-			root.right = ReConstruct(pre, pStart+i-iStart+1, pEnd, in, i+1, iEnd)
+			root.Left = ReConstruct(pre, pStart+1, pStart+i-iStart, in, iStart, i-1)
+			root.Right = ReConstruct(pre, pStart+i-iStart+1, pEnd, in, i+1, iEnd)
 		}
 	}
 	return &root

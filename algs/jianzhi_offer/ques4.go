@@ -30,3 +30,19 @@ func ReplaceBlank1(s string) string {
 	}
 	return ret.String()
 }
+
+// 二分重建
+// https://leetcode-cn.com/problems/minimum-height-tree-lcci/comments/
+func sortedArrayToBST(nums []int) *TreeNode {
+	if len(nums) == 0 {
+		return nil
+	}
+
+	mid := len(nums) >> 1
+	root := &TreeNode{Val: nums[mid]}
+	root.Left = sortedArrayToBST(nums[:mid])
+	if mid < len(nums) {
+		root.Right = sortedArrayToBST(nums[mid+1:])
+	}
+	return root
+}
