@@ -99,12 +99,12 @@ type CQueue struct {
 	st2 []int
 }
 
-func Constructor() CQueue {
-	return CQueue{
-		st1: make([]int, 0, 10),
-		st2: make([]int, 0, 10),
-	}
-}
+//func Constructor() CQueue {
+//	return CQueue{
+//		st1: make([]int, 0, 10),
+//		st2: make([]int, 0, 10),
+//	}
+//}
 
 func (this *CQueue) AppendTail(value int) {
 	this.st1 = append(this.st1, value)
