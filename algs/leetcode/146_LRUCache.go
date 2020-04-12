@@ -13,13 +13,13 @@ type kv struct {
 	val int
 }
 
-func Constructor(capacity int) LRUCache {
-	return LRUCache{
-		m:    make(map[int]*list.Element, 10),
-		eles: list.New(),
-		cap:  capacity,
-	}
-}
+//func Constructor(capacity int) LRUCache {
+//	return LRUCache{
+//		m:    make(map[int]*list.Element, 10),
+//		eles: list.New(),
+//		cap:  capacity,
+//	}
+//}
 
 func (this *LRUCache) Get(key int) int {
 	if v, ok := this.m[key]; ok {
