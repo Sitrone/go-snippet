@@ -34,6 +34,8 @@ func randomGet(nums []int) chan int {
 	var ans = make(chan int)
 
 	go func() {
+		defer close(ans)
+
 		total := len(nums)
 		m := make(map[int]int, total)
 
@@ -57,8 +59,6 @@ func randomGet(nums []int) chan int {
 				m[n] = total - 1
 			}
 		}
-
-		close(ans)
 	}()
 
 	return ans
