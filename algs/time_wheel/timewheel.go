@@ -2,7 +2,6 @@ package time_wheel
 
 import (
 	"container/list"
-	"fmt"
 	"time"
 )
 
@@ -19,13 +18,13 @@ type Position struct {
 	slot, circle int
 }
 
-// TODO 多级时间轮
+// TimeWheel TODO 多级时间轮
 type TimeWheel struct {
 	interval time.Duration
 	ticker   *time.Ticker
 	slots    []map[int]*list.List
 	slotsNum int
-	curPos   int
+	curStep  int
 
 	timerM map[string]*Position
 
@@ -34,7 +33,7 @@ type TimeWheel struct {
 	closed      chan struct{}
 }
 
-// new一个时间轮
+// New new一个时间轮
 func New(interval time.Duration, slotsNum int) *TimeWheel {
 	slots := make([]map[int]*list.List, slotsNum)
 	for i := 0; i < len(slots); i++ {
@@ -46,7 +45,7 @@ func New(interval time.Duration, slotsNum int) *TimeWheel {
 		ticker:      time.NewTicker(interval),
 		slots:       slots,
 		slotsNum:    slotsNum,
-		curPos:      0,
+		curStep:     -1,
 		timerM:      make(map[string]*Position, slotsNum),
 		addTaskChan: make(chan *Task),
 		delTaskChan: make(chan string),
@@ -78,7 +77,7 @@ func (t *TimeWheel) start() {
 	for {
 		select {
 		case <-t.ticker.C:
-			fmt.Println("scan one slot")
+			//fmt.Println("scan one slot")
 			t.handleTicker()
 		case task := <-t.addTaskChan:
 			t.addTask(task)
@@ -93,8 +92,11 @@ func (t *TimeWheel) start() {
 }
 
 func (t *TimeWheel) handleTicker() {
-	// 只处理circle第一圈
-	if l, ok := t.slots[t.curPos][0]; ok {
+	t.curStep++
+	slot, curCycle := t.curStep%t.slotsNum, t.curStep/t.slotsNum
+
+	// 处理当前circle
+	if l, ok := t.slots[slot][curCycle]; ok {
 		if l != nil && l.Len() != 0 {
 			for e := l.Front(); e != nil; {
 				task := e.Value.(*Task)
@@ -110,17 +112,6 @@ func (t *TimeWheel) handleTicker() {
 			}
 		}
 	}
-
-	// circle 往前挪一步
-	for i := 1; i < len(t.slots[t.curPos]); i++ {
-		t.slots[i-1] = t.slots[i]
-	}
-
-	if t.curPos == t.slotsNum-1 {
-		t.curPos = 0
-	} else {
-		t.curPos++
-	}
 }
 
 func (t *TimeWheel) delTask(key string) {
@@ -130,13 +121,17 @@ func (t *TimeWheel) delTask(key string) {
 	}
 
 	m := t.slots[pos.slot]
+	if len(m) == 0 {
+		return
+	}
 	l := m[pos.circle]
-	if len(m) == 0 || l == nil || l.Len() == 0 {
+	if l == nil || l.Len() == 0 {
 		return
 	}
 
 	for e := l.Front(); e != nil; {
 		task := e.Value.(*Task)
+		//log.Printf("remove delay task, key=%s", key)
 		if task.Key == key {
 			delete(t.timerM, task.Key)
 			l.Remove(e)
@@ -159,10 +154,12 @@ func (t *TimeWheel) addTask(task *Task) {
 }
 
 func (t *TimeWheel) getPosition(delay time.Duration) *Position {
-	delaySec := int(delay.Seconds())
-	intervalSec := int(t.interval.Seconds())
+	if delay < t.interval {
+		delay = t.interval
+	}
 
-	slot, circle := (t.curPos+delaySec/intervalSec)%t.slotsNum, delaySec/intervalSec/t.slotsNum
+	steps := int(delay / t.interval)
+	slot, circle := (t.curStep+steps)%t.slotsNum, (steps-1)/t.slotsNum
 	return &Position{
 		slot:   slot,
 		circle: circle,
