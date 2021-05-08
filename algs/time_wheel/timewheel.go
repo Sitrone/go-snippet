@@ -2,6 +2,8 @@ package time_wheel
 
 import (
 	"container/list"
+	"context"
+	"fmt"
 	"time"
 )
 
@@ -10,7 +12,7 @@ type Job func(interface{})
 type Task struct {
 	Key   string // 唯一标识
 	Delay time.Duration
-	data  interface{}
+	Data  interface{}
 	Job
 }
 
@@ -18,7 +20,11 @@ type Position struct {
 	slot, circle int
 }
 
-// TimeWheel TODO 多级时间轮
+func (p *Position) String() string {
+	return fmt.Sprintf("slot=%d, cycle=%d", p.slot, p.circle)
+}
+
+// TimeWheel 时间轮
 type TimeWheel struct {
 	interval time.Duration
 	ticker   *time.Ticker
@@ -77,7 +83,7 @@ func (t *TimeWheel) start() {
 	for {
 		select {
 		case <-t.ticker.C:
-			//fmt.Println("scan one slot")
+			//log.Printf("scan one slot")
 			t.handleTicker()
 		case task := <-t.addTaskChan:
 			t.addTask(task)
@@ -100,7 +106,7 @@ func (t *TimeWheel) handleTicker() {
 		if l != nil && l.Len() != 0 {
 			for e := l.Front(); e != nil; {
 				task := e.Value.(*Task)
-				go task.Job(task.data)
+				go task.Job(task.Data)
 
 				next := e.Next()
 				l.Remove(e)
@@ -142,6 +148,11 @@ func (t *TimeWheel) delTask(key string) {
 }
 
 func (t *TimeWheel) addTask(task *Task) {
+	// 直接覆盖
+	if _, ok := t.timerM[task.Key]; ok {
+		t.delTask(task.Key)
+	}
+
 	pos := t.getPosition(task.Delay)
 	if t.slots[pos.slot][pos.circle] == nil {
 		t.slots[pos.slot][pos.circle] = list.New()
@@ -159,7 +170,7 @@ func (t *TimeWheel) getPosition(delay time.Duration) *Position {
 	}
 
 	steps := int(delay / t.interval)
-	slot, circle := (t.curStep+steps)%t.slotsNum, (steps-1)/t.slotsNum
+	slot, circle := (t.curStep+steps)%t.slotsNum, (t.curStep+steps-1)/t.slotsNum
 	return &Position{
 		slot:   slot,
 		circle: circle,
