@@ -1,0 +1,5 @@
+使用方式：
+1. 使用反射，需要server端开启反射
+grpcurl -plaintext -d '{"name":"zhangsan"}' 127.0.0.1:50051 helloworld.Greeter/SayHello
+
+2. 使用protoset文件去请求做协议转换
