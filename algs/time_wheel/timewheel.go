@@ -2,7 +2,6 @@ package time_wheel
 
 import (
 	"container/list"
-	"context"
 	"fmt"
 	"time"
 )
@@ -117,6 +116,7 @@ func (t *TimeWheel) handleTicker() {
 				e = next
 			}
 		}
+		delete(t.slots[slot], curCycle) // clear
 	}
 }
 
